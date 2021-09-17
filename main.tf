@@ -180,14 +180,14 @@ module "VMserver2" {
   domain_password = var.domain_password
 }
 
-//#Add VM nic to NSG
-//#VM nic1
-//resource "azurerm_network_interface_security_group_association" "nsg_add" {
-//  network_interface_id = module.NIC.vm_nic_id
-//  network_security_group_id = module.nsg_mod.nsg_out
-//}
-//#VM nic2
-//resource "azurerm_network_interface_security_group_association" "nsg_add2" {
-//  network_interface_id = module.NIC2.vm_nic_id
-//  network_security_group_id = module.nsg_mod.nsg_out
-//}
+#Add VM nic to NSG
+#VM nic1
+resource "azurerm_network_interface_security_group_association" "nsg_add" {
+  network_interface_id = module.NIC.vm_nic_id
+  network_security_group_id = module.nsg_mod.nsg_out
+}
+#VM nic2
+resource "azurerm_network_interface_security_group_association" "nsg_add2" {
+  network_interface_id = module.NIC2.vm_nic_id
+  network_security_group_id = module.nsg_mod.nsg_out
+}
