@@ -29,9 +29,10 @@ resource "azurerm_virtual_machine" "VMserver" {
   }
   storage_os_disk {
     create_option = var.VMServer_CreateOption
-    name = "${var.VMserver_name}-${var.os_disk_name}"
+    name = var.os_disk_name
   }
   delete_os_disk_on_termination = true
+  delete_data_disks_on_termination = true
   os_profile {
     computer_name = var.VMserver_name
     admin_username = var.VMServer_admin_username
@@ -43,12 +44,20 @@ resource "azurerm_virtual_machine" "VMserver" {
 #Add server to availability set
   availability_set_id = var.vm_availabilty_set_id
 
+  #Add Paging disk
+  storage_data_disk {
+    create_option = var.p_data_disk_Coption
+    lun = 0
+    name = var.p_data_disk_name
+    disk_size_gb = var.p_data_disk_size
+  }
+
   #Add data disk
   storage_data_disk {
     create_option = var.data_disk_Coption
     name = var.data_disk_name
     disk_size_gb = var.data_disk_size
-    lun = 0
+    lun = 1
   }
 
 }

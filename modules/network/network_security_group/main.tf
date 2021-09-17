@@ -4,7 +4,7 @@ data azurerm_resource_group "ResGP"{
 
 resource "azurerm_network_security_group" "NSG" {
   location = data.azurerm_resource_group.ResGP.location
-  name = var.nsg_name
+  name = var.basic_nsg_name
   resource_group_name = data.azurerm_resource_group.ResGP.name
 
   security_rule {

@@ -29,7 +29,7 @@ output "image_id" {
 #Create Network Security Group
 module "nsg_mod" {
   source = "./modules/network/network_security_group"
-  nsg_name = var.nsg_name
+  basic_nsg_name = var.basic_nsg_name
   sec_rule_access = var.sec_rule_access
   sec_rule_destination_address_prefix = var.sec_rule_destination_address_prefix
   sec_rule_destination_port_range = var.sec_rule_destination_port_range
@@ -151,6 +151,9 @@ module "VMserver" {
   data_disk_name = "${var.VMserver_name}${var.data_disk_name}"
   data_disk_size = var.data_disk_size
   domain_password = var.domain_password
+  p_data_disk_Coption = var.p_data_disk_Coption
+  p_data_disk_name = "${var.VMserver_name}${var.p_data_disk_name}"
+  p_data_disk_size = var.p_data_disk_size
 }
 #Server2
 module "VMserver2" {
@@ -178,6 +181,9 @@ module "VMserver2" {
   data_disk_name = "${var.VMserver2_name}${var.data_disk_name}"
   data_disk_size = var.data2_disk_size
   domain_password = var.domain_password
+  p_data_disk_Coption = var.p_data_disk_Coption
+  p_data_disk_name = "${var.VMserver2_name}${var.p_data_disk_name}"
+  p_data_disk_size = var.p_data_disk_size
 }
 
 #Add VM nic to NSG
@@ -190,4 +196,14 @@ resource "azurerm_network_interface_security_group_association" "nsg_add" {
 resource "azurerm_network_interface_security_group_association" "nsg_add2" {
   network_interface_id = module.NIC2.vm_nic_id
   network_security_group_id = module.nsg_mod.nsg_out
+}
+
+module "loadbalancer" {
+  source = "./modules/network/load_balancer"
+  lb_ResGP_name = var.lb_ResGP_name
+  lb_allocation_method = var.lb_allocation_method
+  lb_front_ip_config_name = var.lb_front_ip_config_name
+  lb_location = var.lb_location
+  lb_name = "${var.ProjectName}${var.lb_name}"
+  lb_public_name = "${var.ProjectName}${var.lb_public_name}"
 }

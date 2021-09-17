@@ -14,10 +14,9 @@ ResGP_location                        = "eastus2"
 
 #NSG information
 #Deny basic
-basic_nsg_name =  "AllowVnetInBound"
+basic_nsg_name =  "AutoAnyProdNSG"
 
 #Remote Desktop
-nsg_name                              = "AutoAnyProdNSG"
 sec_rule_name                         = "RDP_TCP_3389"
 sec_rule_priority                     = "100"
 sec_rule_direction                    = "Inbound"
@@ -38,7 +37,7 @@ subnet_ResGP_name               = "VNETs-RG"
 subnet_vnet_name                = "MHE-PROD-VNET"
 
 #Resource Group Information
-avail_set_name                  = "-avail-set"
+avail_set_name                  = "-Avail-Set"
 
 #OS Image information
 OS_image_name                   = "MHESvr2K19Std"
@@ -49,7 +48,7 @@ OS_image_ResGP_name             = "MHETemplatesRG"
 VMserver_name                   = "za2gtbw9002"
 vm_size                         = "Standard_D8s_v4"
 VMServer_CreateOption           = "FromImage"
-os_disk_name                    = "OSDisk"
+os_disk_name                    = "-OSDisk"
 VMServer_admin_username         = "MHEAdmin"
 VMServer_admin_password         = "!QAZ1qaz@WSX2wsx"
 
@@ -80,3 +79,11 @@ p_data2_disk_size                = "48"
 data2_disk_name                  = "-Datadisk"
 data2_disk_Coption               = "Empty"
 data2_disk_size                  = "512"
+
+#Load Balancer information
+lb_location                     = "eastus2"
+lb_name                         = "LB"
+lb_ResGP_name                   = "AutoAnyProd"
+lb_allocation_method            = "Static"
+lb_public_name                  = "PubNameLB"
+lb_front_ip_config_name         = "FrontIP"

@@ -41,6 +41,11 @@ variable "OS_Profile_WindowsConfig" {
   default =  true
 }
 
+#Paging disk variables
+variable "p_data_disk_Coption" {}
+variable "p_data_disk_name" {}
+variable "p_data_disk_size" {}
+
 #Data disk variables
 variable "data_disk_Coption" {}
 variable "data_disk_name" {}

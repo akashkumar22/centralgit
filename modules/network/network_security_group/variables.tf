@@ -1,5 +1,5 @@
 variable "ResGP_name" {}
-variable "nsg_name" {}
+variable "basic_nsg_name" {}
 variable "sec_rule_name" {}
 variable "sec_rule_priority" {}
 variable "sec_rule_direction" {}

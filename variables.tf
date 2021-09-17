@@ -6,7 +6,7 @@ variable "ResGP_name" {}
 variable "ResGP_location" {}
 
 #NSG variables
-variable "nsg_name" {}
+variable "basic_nsg_name" {}
 variable "sec_rule_name" {}
 variable "sec_rule_priority" {}
 variable "sec_rule_direction" {}
@@ -40,7 +40,7 @@ variable "avail_set_name" {}
 #NIC variables
 #NIC1
 variable "nic_name" {
-  default = "-nic"
+  default = "-Nic"
 }
 variable "nic_ip_config_name" {
   default = "internal"
@@ -52,7 +52,7 @@ variable "nic_ip_config_PrivIPAddAlloc" {
 }
 #NIC2
 variable "nic2_name" {
-  default = "-nic"
+  default = "-Nic"
 }
 variable "nic2_ip_config_name" {
   default = "internal"
@@ -81,6 +81,11 @@ variable "OS_Profile_WindowsConfig" {
 }
 variable "VMServer_admin_username" {}
 variable "VMServer_admin_password" {}
+
+#Paging disk variables
+variable "p_data_disk_Coption" {}
+variable "p_data_disk_name" {}
+variable "p_data_disk_size" {}
 
 #Data Disk variables
 variable "data_disk_Coption" {}
@@ -155,3 +160,10 @@ variable "VM2_Extension_TypeHandler" {
   default = "1.3"
 }
 
+#Load Balancer variables
+variable "lb_location" {}
+variable "lb_name" {}
+variable "lb_ResGP_name" {}
+variable "lb_allocation_method" {}
+variable "lb_public_name" {}
+variable "lb_front_ip_config_name" {}
