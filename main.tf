@@ -206,4 +206,9 @@ module "loadbalancer" {
   lb_location = var.lb_location
   lb_name = "${var.ProjectName}${var.lb_name}"
   lb_public_name = "${var.ProjectName}${var.lb_public_name}"
+  tag_BusUnit = var.tag_BusUnit
+  tag_CostCen = var.tag_CostCen
+  tag_app = var.tag_app
+  tag_env = var.tag_env
+  tag_projNum = var.tag_projNum
 }
