@@ -6,17 +6,6 @@ data "azurerm_resource_group" "ResGP" {
   name = var.ResGP_name
 }
 
-//module "ResGP" {
-//  source = "./modules/base/resources"
-//  ResGP_location = var.ResGP_location
-//  ResGP_name = var.ResGP_name
-//  tag_BusUnit = var.tag_BusUnit
-//  tag_CostCen = var.tag_CostCen
-//  tag_app = var.tag_app
-//  tag_env = var.tag_env
-//  tag_projNum = var.tag_projNum
-//}
-
 #Lookup image
 data azurerm_image "image_name" {
   resource_group_name = var.OS_image_ResGP_name
@@ -197,7 +186,7 @@ resource "azurerm_network_interface_security_group_association" "nsg_add2" {
   network_interface_id = module.NIC2.vm_nic_id
   network_security_group_id = module.nsg_mod.nsg_out
 }
-
+#Load balancer
 module "loadbalancer" {
   source = "./modules/network/load_balancer"
   lb_ResGP_name = var.lb_ResGP_name
@@ -211,4 +200,26 @@ module "loadbalancer" {
   tag_app = var.tag_app
   tag_env = var.tag_env
   tag_projNum = var.tag_projNum
+}
+#Storage Account
+resource azurerm_storage_account "StorageAccount" {
+  account_replication_type = var.SA_replicationType
+  account_tier = var.SA_AccountTier
+  access_tier = var.SA_AccessTier
+  location = var.ResGP_location
+  name = lower("${var.ProjectName}storageaccount")
+  resource_group_name = var.ResGP_name
+  account_kind = var.SA_AccountKind
+  tags = {
+    Environment     = var.tag_env
+    Application     = var.tag_app
+    Project_Number  = var.tag_projNum
+    CostCenter      = var.tag_CostCen
+    BusinessUnit    = var.tag_BusUnit
+  }
+}
+#Storage Account File Share
+resource azurerm_storage_share "ProdFS" {
+  name = lower ("${var.ProjectName}prod")
+  storage_account_name = azurerm_storage_account.StorageAccount.name
 }

@@ -87,3 +87,9 @@ lb_ResGP_name                   = "AutoAnyProd"
 lb_allocation_method            = "Static"
 lb_public_name                  = "PubNameLB"
 lb_front_ip_config_name         = "FrontIP"
+
+#Storage Account
+SA_AccountTier                  = "Standard"
+SA_AccessTier                   = "Hot"
+SA_replicationType              = "LRS"
+SA_AccountKind                  = "StorageV2"

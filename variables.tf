@@ -167,3 +167,18 @@ variable "lb_ResGP_name" {}
 variable "lb_allocation_method" {}
 variable "lb_public_name" {}
 variable "lb_front_ip_config_name" {}
+
+#Storage Account variables
+variable "SA_replicationType" {
+  description = "(Required) Defines the type of replication to use for this storage account. Valid options are LRS, GRS, RAGRS, ZRS, GZRS and RAGZRS"
+  default = "LRS"
+}
+variable "SA_AccountTier" {
+  description = "(Required) Defines the Tier to use for this storage account."
+}
+variable "SA_AccessTier" {
+  description = "(Optional) Defines the access tier for BlobStorage, FileStorage and StorageV2 accounts. Valid options are Hot and Cool, defaults to Hot."
+}
+variable "SA_AccountKind" {
+  description = "(Optional) Defines the Kind of account. Valid options are BlobStorage, BlockBlobStorage, FileStorage, Storage and StorageV2. Changing this forces a new resource to be created. Defaults to StorageV2."
+}
