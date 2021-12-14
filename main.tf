@@ -1,4 +1,5 @@
 provider "azurerm" {
+  subscription_id = "1a3a1d6b-7b2a-409c-964e-f89cd4487b9d"
   features {}
 }
 
@@ -16,28 +17,153 @@ output "image_id" {
 }
 
 #Create Network Security Group
-module "nsg_mod" {
+module "NSG_ProjName" {
+  depends_on = [module.VMserver]
   source = "./modules/network/network_security_group"
+  ResGP_name = data.azurerm_resource_group.ResGP.name
   basic_nsg_name = var.basic_nsg_name
-  sec_rule_access = var.sec_rule_access
-  sec_rule_destination_address_prefix = var.sec_rule_destination_address_prefix
-  sec_rule_destination_port_range = var.sec_rule_destination_port_range
-  sec_rule_direction = var.sec_rule_direction
-  sec_rule_name = var.sec_rule_name
-  sec_rule_priority = var.sec_rule_priority
-  sec_rule_protocol = var.sec_rule_protocol
-  sec_rule_source_address_prefixes = var.sec_rule_source_address_prefixes
-  sec_rule_source_port_range = var.sec_rule_source_port_range
 
   tag_app = var.tag_app
   tag_env = var.tag_env
   tag_BusUnit = var.tag_BusUnit
   tag_CostCen = var.tag_CostCen
   tag_projNum = var.tag_projNum
-
-//  depends_on = [data.ResGP]
+}
+#Create Network Security Rules SNOW
+module "NSR_SNOW" {
+  depends_on = [module.VMserver]
+  source = "./modules/network/NSR_SNOW"
+  NSG_name   = module.NSG_ProjName.nsg_out_name
   ResGP_name = var.ResGP_name
 }
+#Create Network Security Rule WSUS
+module "NSR_WSUS" {
+  depends_on = [module.VMserver]
+  source = "./modules/network/NSR_WSUS"
+  NSG_name   = module.NSG_ProjName.nsg_out_name
+  ResGP_name = var.ResGP_name
+}
+#Create Network Security Rule KMS
+module "NSR_KMS" {
+  depends_on = [module.VMserver]
+  source = "./modules/network/NSR_KMS"
+  NSG_name   = module.NSG_ProjName.nsg_out_name
+  ResGP_name = var.ResGP_name
+}
+#Create Network Security Rule MicroFocus
+module "NSR_MicroFocus" {
+  depends_on = [module.VMserver]
+  source = "./modules/network/NSR_Microfocus"
+  NSG_name   = module.NSG_ProjName.nsg_out_name
+  ResGP_name = var.ResGP_name
+}
+#Create Network Security Rule AdminCenter
+module "NSR_AdminCenter" {
+  depends_on = [module.VMserver]
+  source = "./modules/network/NSR_AdminCenter"
+  NSG_name   = module.NSG_ProjName.nsg_out_name
+  ResGP_name = var.ResGP_name
+}
+#Create Network Security Rule ICMP for DCs
+module "NSR_ICMPforDCs" {
+  depends_on = [module.VMserver]
+  source = "./modules/network/NSR_ICMPforDCs"
+  NSG_name   = module.NSG_ProjName.nsg_out_name
+  ResGP_name = var.ResGP_name
+}
+#Create Network Security Rule AutoAny SQL
+resource azurerm_network_security_rule "AA_SQL_1433" {
+  depends_on = [module.VMserver]
+
+  access                          = "Allow"
+  direction                       = "Outbound"
+  name                            = "AA_SQL_1433"
+  network_security_group_name     = module.NSG_ProjName.nsg_out_name
+  priority                        = 100
+  protocol                        = "TCP"
+  resource_group_name             = var.ResGP_name
+  source_port_range               = "*"
+  destination_port_range          = "1433"
+  source_address_prefix           = "*"
+  destination_address_prefix      = "VirtualNetwork"
+  description                     = "SQL TCP port 1433 outbound for any virtual netowrk."
+}
+#Create Network Security Rule Port 11000-11999
+resource azurerm_network_security_rule "AA_11000-11999" {
+  access                          = "Allow"
+  direction                       = "Outbound"
+  name                            = "AA_11000-11999"
+  network_security_group_name     = module.NSG_ProjName.nsg_out_name
+  priority                        = 101
+  protocol                        = "*"
+  resource_group_name             = var.ResGP_name
+  source_port_range               = "*"
+  destination_port_range          = "11000-11999"
+  source_address_prefix           = "*"
+  destination_address_prefix      = "*"
+  description                     = "TBD"
+}
+#Create Network Security Rule Port 14000-14999
+resource azurerm_network_security_rule "AA_14000-14999" {
+  access                          = "Allow"
+  direction                       = "Outbound"
+  name                            = "AA_14000-14999"
+  network_security_group_name     = module.NSG_ProjName.nsg_out_name
+  priority                        = 102
+  protocol                        = "TCP"
+  resource_group_name             = var.ResGP_name
+  source_port_range               = "*"
+  destination_port_range          = "14000-14999"
+  source_address_prefix           = "*"
+  destination_address_prefix      = "*"
+  description                     = "TBD"
+}
+#Create Network Security Rule Port 1434
+resource azurerm_network_security_rule "AA_SQL_1434" {
+  access                          = "Allow"
+  direction                       = "Outbound"
+  name                            = "AA_SQL_1434"
+  network_security_group_name     = module.NSG_ProjName.nsg_out_name
+  priority                        = 103
+  protocol                        = "TCP"
+  resource_group_name             = var.ResGP_name
+  source_port_range               = "*"
+  destination_port_range          = "1434"
+  source_address_prefix           = "*"
+  destination_address_prefix      = "*"
+  description                     = "TBD"
+}
+#Create NSR port 8080
+resource azurerm_network_security_rule "AA_TCP_In8080" {
+  access                            = "Allow"
+  direction                         = "Inbound"
+  name                              = "AA_TCP_In8080"
+  network_security_group_name       = module.NSG_ProjName.nsg_out_name
+  priority                          = 125
+  protocol                          = "TCP"
+  resource_group_name               = var.ResGP_name
+  source_port_range                 = "*"
+  destination_port_range            = "8080"
+  source_address_prefixes           = ["10.112.0.0/16", "10.213.0.0/16", "10.212.0.0/16","10.152.0.0/16","10.229.0.0/16"]
+  destination_address_prefix      = "*"
+  description                       = "TCP Port 8080 for Auto Any Portal"
+}
+#Create NSR port Outbound 8080
+resource azurerm_network_security_rule "AA_TCP_Out8080" {
+  access                            = "Allow"
+  direction                         = "Outbound"
+  name                              = "AA_TCP_Out8080"
+  network_security_group_name       = module.NSG_ProjName.nsg_out_name
+  priority                          = 126
+  protocol                          = "TCP"
+  resource_group_name               = var.ResGP_name
+  source_port_range                 = "*"
+  destination_port_range            = "8080"
+  source_address_prefix             = "*"
+  destination_address_prefixes      = ["10.112.0.0/16", "10.213.0.0/16", "10.212.0.0/16","10.152.0.0/16","10.229.0.0/16"]
+  description                       = "TCP Port 8080 for Auto Any Portal"
+}
+
 
 #Create Availability Set
 module "avail_set" {
@@ -179,12 +305,12 @@ module "VMserver2" {
 #VM nic1
 resource "azurerm_network_interface_security_group_association" "nsg_add" {
   network_interface_id = module.NIC.vm_nic_id
-  network_security_group_id = module.nsg_mod.nsg_out
+  network_security_group_id = module.NSG_ProjName.nsg_out_id
 }
 #VM nic2
 resource "azurerm_network_interface_security_group_association" "nsg_add2" {
   network_interface_id = module.NIC2.vm_nic_id
-  network_security_group_id = module.nsg_mod.nsg_out
+  network_security_group_id = module.NSG_ProjName.nsg_out_id
 }
 #Load balancer
 module "loadbalancer" {
