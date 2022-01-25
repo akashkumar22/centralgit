@@ -29,6 +29,13 @@ module "NSG_ProjName" {
   tag_CostCen = var.tag_CostCen
   tag_projNum = var.tag_projNum
 }
+#Create Network Security Rules Basic
+module "NSR_Basic" {
+  depends_on = [module.VMserver]
+  source = "./modules/network/NSR_Basics"
+  NSG_name   = module.NSG_ProjName.nsg_out_name
+  ResGP_name = var.ResGP_name
+}
 #Create Network Security Rules SNOW
 module "NSR_SNOW" {
   depends_on = [module.VMserver]
@@ -307,11 +314,12 @@ resource "azurerm_network_interface_security_group_association" "nsg_add" {
   network_interface_id = module.NIC.vm_nic_id
   network_security_group_id = module.NSG_ProjName.nsg_out_id
 }
-#VM nic2
+VM nic2
 resource "azurerm_network_interface_security_group_association" "nsg_add2" {
   network_interface_id = module.NIC2.vm_nic_id
   network_security_group_id = module.NSG_ProjName.nsg_out_id
 }
+
 #Load balancer
 module "loadbalancer" {
   source = "./modules/network/load_balancer"

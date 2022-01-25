@@ -13,3 +13,4 @@ test/
 .DS_Store
 *workspace*g
 .terraform.lock.hcl
+.terraform.tfstate.lock.info
