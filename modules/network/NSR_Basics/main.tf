@@ -24,7 +24,7 @@ resource azurerm_network_security_rule "NSR_BasicInternalRDP" {
   resource_group_name           = var.ResGP_name
   source_port_range             = "*"
   destination_port_range        = "3389"
-  source_address_prefixes       = ["10.112.0.0/16","10.212.0.0/16","10.213.0.0/16","10.152.8.0/24"]
+  source_address_prefixes       = ["10.0.0.0/8", "172.16.0.0/12", "152.54.0.0/16", "152.64.0.0/16", "152.159.0.0/16", "168.116.0.0/16", "198.45.31.0/24"]
   destination_address_prefix    = "*"
   description                   = "Enables RDP traffic over 3389 TCP from the Datacenters and ZPAs"
 }
@@ -38,7 +38,7 @@ resource azurerm_network_security_rule "ICMP_for_DCs" {
   resource_group_name             = var.ResGP_name
   source_port_range               = "*"
   destination_port_range          = "*"
-  source_address_prefixes         = ["10.212.0.0/16","10.213.0.0/16","10.152.0.0/16"]
+  source_address_prefixes         = ["10.0.0.0/8"]
   destination_address_prefix      = "*"
   description                     = "Enables ICMP (ping) traffic from the datacenters and ZPAs"
 }

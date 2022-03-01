@@ -9,7 +9,7 @@ resource azurerm_network_security_rule "AdminCenter_TCP5985" {
   resource_group_name             = var.ResGP_name
   source_port_range               = "*"
   destination_port_range          = "5985"
-  source_address_prefix           = "10.212.32.115"
+  source_address_prefix           = "10.250.127.5"
   destination_address_prefix      = "*"
 }
 resource azurerm_network_security_rule "AdminCenter_TCP5986" {
@@ -22,6 +22,6 @@ resource azurerm_network_security_rule "AdminCenter_TCP5986" {
   resource_group_name             = var.ResGP_name
   source_port_range               = "*"
   destination_port_range          = "5986"
-  source_address_prefix           = "10.212.32.115"
+  source_address_prefix           = "10.250.127.5"
   destination_address_prefix      = "*"
 }
